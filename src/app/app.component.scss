@@ -1,0 +1,13 @@
+::ng-deep .p-button {
+  padding: 12px 24px;
+  background-color: #2E3EDF;
+  border-radius: 40px;
+  border-color: #2E3EDF;
+
+  &:not(:disabled) {
+    &:hover {
+      background-color: #1A1F9E;
+      border-color: #1A1F9E;
+    }
+  }
+}
