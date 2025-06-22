@@ -4,21 +4,5 @@
     url('/assets/images/start_page.jpg');
 }
 
-::ng-deep .p-inputtext:enabled {
-  border-radius: 40px;
-  background-color: #1C1A20CC;
-  border-color: #FFFFFF;
-  color: #FFFFFF;
-
-  &:focus {
-    background-color: #1C1A20CC;
-    border-color: #FFFFFF;
-  }
-
-   &::placeholder {
-    color: #FFFFFF;
-    opacity: 1;
-  }
-}
 
 

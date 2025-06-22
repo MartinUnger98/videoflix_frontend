@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { PrimeIcons } from 'primeng/api';
@@ -12,7 +12,8 @@ import { PrimeIcons } from 'primeng/api';
     InputTextModule
   ],
   templateUrl: './start-page.component.html',
-  styleUrl: './start-page.component.scss'
+  styleUrls: ['./start-page.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class StartPageComponent {
   primeicons = PrimeIcons;
