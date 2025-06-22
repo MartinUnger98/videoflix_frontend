@@ -25,13 +25,8 @@ const VideoflixTheme = definePreset(Aura, {
       paddingY: '12px',
       paddingX: '24px'
     },
-    inputtext: {
-      borderRadius: '40px',
-      background: '#1C1A20CC',
-      color: '#FFFFFF',
-      borderColor: '#FFFFFF',
-      placeholderColor: '#FFFFFF',
-      focusBackground: '#1C1A20CC',
+    iconfield: {
+      iconColor: '#2E3EDF',
     }
   }
 });

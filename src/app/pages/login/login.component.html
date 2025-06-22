@@ -1,0 +1,22 @@
+<main class="relative min-h-screen bg-cover bg-center bg-no-repeat login-bg flex flex-col items-center justify-center text-white text-center">
+  <form class="form-container flex flex-col items-center mt-6 gap-4 py-11 px-14 ">
+    <h1 class="font-bold text-5xl">Log in</h1>
+
+    <p-iconfield class="w-full">
+      <p-inputicon [styleClass]="primeicons.ENVELOPE"  />
+      <input class="w-full" type="email" pInputText placeholder="Email Address" />
+    </p-iconfield>
+
+    <p-iconfield class="w-full" >
+      <p-inputicon [styleClass]="primeicons.LOCK" />
+      <input class="w-full" type="password" pInputText placeholder="Password" />
+      <p-inputicon [styleClass]="primeicons.EYE" />
+    </p-iconfield>
+
+    <p-button
+      severity="primary"
+      class="font-bold text-lg"
+      label="Log in"
+    ></p-button>
+  </form>
+</main>
