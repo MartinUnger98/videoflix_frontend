@@ -3,55 +3,80 @@
 >
   <form
     class="form-container flex flex-col items-center mt-6 gap-8 py-11 sm:px-14 px-6 w-80 sm:w-auto"
+    [formGroup]="form"
+    (ngSubmit)="onSubmit()"
   >
     <h1 class="font-bold sm:text-5xl text-4xl">Sign Up</h1>
 
-    <p-iconfield class="sm:w-96 w-full">
-      <p-inputicon [styleClass]="primeicons.ENVELOPE" />
-      <input
-        class="w-full"
-        type="email"
-        pInputText
-        placeholder="Email Address"
-      />
-    </p-iconfield>
+    <div class="flex flex-col items-start gap-1">
+      <p-iconfield class="sm:w-96 w-full">
+        <p-inputicon [styleClass]="primeicons.ENVELOPE" />
+        <input
+          class="w-full"
+          type="email"
+          pInputText
+          formControlName="email"
+          placeholder="Email Address"
+        />
+      </p-iconfield>
+      @if (form.controls['email'].invalid && form.controls['email'].touched) {
+      <p class="text-red-400 text-sm">Please enter a valid email.</p>
+      }
+    </div>
 
-    <p-iconfield class="sm:w-96 w-full">
-      <p-inputicon [styleClass]="primeicons.LOCK" />
-      <input
-        class="w-full"
-        [type]="showPassword ? 'text' : 'password'"
-        pInputText
-        placeholder="Enter a password"
-      />
-      <p-inputicon
-        [styleClass]="showPassword ? primeicons.EYE_SLASH : primeicons.EYE"
-        (click)="togglePassword('showPassword')"
-        class="cursor-pointer"
-      />
-    </p-iconfield>
+    <div class="flex flex-col items-start gap-1">
+      <p-iconfield class="sm:w-96 w-full">
+        <p-inputicon [styleClass]="primeicons.KEY" />
+        <input
+          class="w-full"
+          [type]="showPassword ? 'text' : 'password'"
+          pInputText
+          formControlName="password"
+          placeholder="Enter a password"
+        />
+        <p-inputicon
+          [styleClass]="showPassword ? primeicons.EYE_SLASH : primeicons.EYE"
+          (click)="togglePassword('showPassword')"
+          class="cursor-pointer"
+        />
+      </p-iconfield>
+      @if ( form.controls['password'].invalid &&
+      form.controls['password'].touched ) {
+      <p class="text-red-400 text-sm">
+        Password must be at least 8 characters.
+      </p>
+      }
+    </div>
 
-    <p-iconfield class="sm:w-96 w-full">
-      <p-inputicon [styleClass]="primeicons.LOCK" />
-      <input
-        class="w-full"
-        [type]="showConfirmPassword ? 'text' : 'password'"
-        pInputText
-        placeholder="Confirm password"
-      />
-      <p-inputicon
-        [styleClass]="
-          showConfirmPassword ? primeicons.EYE_SLASH : primeicons.EYE
-        "
-        (click)="togglePassword('showConfirmPassword')"
-        class="cursor-pointer"
-      />
-    </p-iconfield>
+    <div class="flex flex-col items-start gap-1">
+      <p-iconfield class="sm:w-96 w-full">
+        <p-inputicon [styleClass]="primeicons.KEY" />
+        <input
+          class="w-full"
+          [type]="showConfirmPassword ? 'text' : 'password'"
+          pInputText
+          formControlName="confirmPassword"
+          placeholder="Confirm password"
+        />
+        <p-inputicon
+          [styleClass]="
+            showConfirmPassword ? primeicons.EYE_SLASH : primeicons.EYE
+          "
+          (click)="togglePassword('showConfirmPassword')"
+          class="cursor-pointer"
+        />
+      </p-iconfield>
+      @if (form.controls['confirmPassword'].invalid &&
+      form.controls['confirmPassword'].touched) {
+      <p class="text-red-400 text-sm">Passwords do not match.</p>
+      }
+    </div>
 
     <p-button
       severity="primary"
       class="font-bold text-lg"
       label="Get Started"
+      type="submit"
     ></p-button>
   </form>
 </main>
