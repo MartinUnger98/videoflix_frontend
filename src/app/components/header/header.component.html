@@ -1,4 +1,14 @@
 <main class="flex justify-between py-10 px-24">
-  <img src="assets/images/videoflix_logo.svg" alt="Videoflix Logo" class="cursor-pointer"/>
-  <p-button severity="primary" class="font-bold text-lg" label="Log in"></p-button>
+  <img
+    src="assets/images/videoflix_logo.svg"
+    alt="Videoflix Logo"
+    class="cursor-pointer"
+    [routerLink]="'/'"
+  />
+  <p-button
+    severity="primary"
+    class="font-bold text-lg"
+    label="Log in"
+    [routerLink]="'/login'"
+  ></p-button>
 </main>

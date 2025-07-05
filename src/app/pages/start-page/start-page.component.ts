@@ -6,14 +6,10 @@ import { PrimeIcons } from 'primeng/api';
 
 @Component({
   selector: 'app-start-page',
-  imports: [
-    CommonModule,
-    ButtonModule,
-    InputTextModule
-  ],
+  imports: [CommonModule, ButtonModule, InputTextModule],
   templateUrl: './start-page.component.html',
   styleUrls: ['./start-page.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class StartPageComponent {
   primeicons = PrimeIcons;

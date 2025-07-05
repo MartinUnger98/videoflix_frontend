@@ -1,17 +1,21 @@
-.start-page-bg {
+.signUp-bg {
   background-image: linear-gradient(
       180deg,
       #000000 -19.89%,
       rgba(0, 0, 0, 0.55) 40.46%,
       #000000 100%
     ),
-    url("/assets/images/start_page.jpg");
+    url("/assets/images/sign_up.jpg");
+}
+
+.form-container {
+  background-color: #1b1b22d9;
+  border-radius: 48px;
 }
 
 .p-inputtext:enabled {
-  border-radius: 40px;
   background-color: #1c1a20cc;
-  border-color: #ffffff;
+  border-color: var(--p-primary-color);
   color: #ffffff;
 
   &:focus {
