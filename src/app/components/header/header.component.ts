@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 
 @Component({
@@ -9,4 +9,11 @@ import { ButtonModule } from 'primeng/button';
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
-export class HeaderComponent {}
+export class HeaderComponent {
+  constructor(public router: Router) {}
+  hiddenButtonRoutes = ['/login'];
+
+  showLoginButton(): boolean {
+    return !this.hiddenButtonRoutes.includes(this.router.url);
+  }
+}
