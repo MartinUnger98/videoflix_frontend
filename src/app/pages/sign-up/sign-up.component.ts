@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -12,6 +12,7 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
 import { passwordMatchValidator } from './password-validator';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-sign-up',
@@ -27,13 +28,14 @@ import { passwordMatchValidator } from './password-validator';
   templateUrl: './sign-up.component.html',
   styleUrl: './sign-up.component.scss',
 })
-export class SignUpComponent {
+export class SignUpComponent implements OnInit {
   primeicons = PrimeIcons;
 
   showPassword = false;
   showConfirmPassword = false;
 
   readonly fb = inject(FormBuilder);
+  readonly route = inject(ActivatedRoute);
 
   form: FormGroup = this.fb.group(
     {
@@ -53,6 +55,13 @@ export class SignUpComponent {
       validators: passwordMatchValidator(),
     }
   );
+
+  ngOnInit() {
+    const emailFromUrl = this.route.snapshot.queryParamMap.get('email');
+    if (emailFromUrl) {
+      this.form.patchValue({ email: emailFromUrl });
+    }
+  }
 
   togglePassword(field: 'showPassword' | 'showConfirmPassword') {
     this[field] = !this[field];

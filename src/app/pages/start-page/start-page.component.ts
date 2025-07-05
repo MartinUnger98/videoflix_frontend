@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, inject, ViewEncapsulation } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { PrimeIcons } from 'primeng/api';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-start-page',
@@ -13,4 +14,9 @@ import { PrimeIcons } from 'primeng/api';
 })
 export class StartPageComponent {
   primeicons = PrimeIcons;
+  router = inject(Router);
+
+  goToSignUp(email: string) {
+    this.router.navigate(['/sign-up'], { queryParams: { email } });
+  }
 }

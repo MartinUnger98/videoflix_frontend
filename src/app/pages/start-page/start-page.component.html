@@ -1,14 +1,17 @@
 <main
   class="relative min-h-screen bg-cover bg-center bg-no-repeat start-page-bg flex flex-col items-center justify-center text-white text-center sm:px-8 px-4"
 >
-  <h1 class="font-bold sm:text-5xl text-4xl pb-6">Movies, TV shows, and more</h1>
+  <h1 class="font-bold sm:text-5xl text-4xl pb-6">
+    Movies, TV shows, and more
+  </h1>
   <p class="sm:font-medium font-normal sm:text-lg text-base">
     Enter your email to create or restart your subscription.
   </p>
   <div class="sm:w-auto w-full">
     <form class="flex sm:flex-row flex-col items-center mt-6 gap-4">
-      <input class="w-80" type="email" pInputText placeholder="Email Address" />
+      <input class="w-80" type="email" pInputText placeholder="Email Address" #emailInput />
       <p-button
+        (click)="goToSignUp(emailInput.value)"
         [icon]="primeicons.ANGLE_RIGHT"
         iconPos="right"
         severity="primary"
