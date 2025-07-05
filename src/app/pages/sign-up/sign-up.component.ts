@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -15,6 +15,7 @@ import { passwordMatchValidator } from './password-validator';
 
 @Component({
   selector: 'app-sign-up',
+  standalone: true,
   imports: [
     CommonModule,
     ButtonModule,
@@ -32,28 +33,26 @@ export class SignUpComponent {
   showPassword = false;
   showConfirmPassword = false;
 
-  form: FormGroup;
+  readonly fb = inject(FormBuilder);
 
-  constructor(private fb: FormBuilder) {
-    this.form = this.fb.group(
-      {
-        email: [
-          '',
-          [
-            Validators.required,
-            Validators.pattern(
-              /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
-            ),
-          ],
+  form: FormGroup = this.fb.group(
+    {
+      email: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(
+            /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+          ),
         ],
-        password: ['', [Validators.required, Validators.minLength(8)]],
-        confirmPassword: ['', [Validators.required]],
-      },
-      {
-        validators: passwordMatchValidator(),
-      }
-    );
-  }
+      ],
+      password: ['', [Validators.required, Validators.minLength(8)]],
+      confirmPassword: ['', [Validators.required]],
+    },
+    {
+      validators: passwordMatchValidator(),
+    }
+  );
 
   togglePassword(field: 'showPassword' | 'showConfirmPassword') {
     this[field] = !this[field];

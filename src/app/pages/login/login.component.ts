@@ -21,6 +21,7 @@ import { InputIconModule } from 'primeng/inputicon';
 export class LoginComponent {
   primeicons = PrimeIcons;
   showPassword = false;
+  loginError = false;
 
   togglePassword() {
     this.showPassword = !this.showPassword;
