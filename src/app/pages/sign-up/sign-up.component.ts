@@ -12,11 +12,13 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
 import { passwordMatchValidator } from './password-validator';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { HttpClientModule } from '@angular/common/http';
+import { RegisterResponse } from '../../services/auth.utils';
 
 @Component({
   selector: 'app-sign-up',
-  standalone: true,
   imports: [
     CommonModule,
     ButtonModule,
@@ -24,6 +26,7 @@ import { ActivatedRoute } from '@angular/router';
     IconFieldModule,
     InputIconModule,
     ReactiveFormsModule,
+    HttpClientModule
   ],
   templateUrl: './sign-up.component.html',
   styleUrl: './sign-up.component.scss',
@@ -34,8 +37,11 @@ export class SignUpComponent implements OnInit {
   showPassword = false;
   showConfirmPassword = false;
 
-  readonly fb = inject(FormBuilder);
-  readonly route = inject(ActivatedRoute);
+  fb = inject(FormBuilder);
+  route = inject(ActivatedRoute);
+  router = inject(Router);
+  authService = inject(AuthService);
+
 
   form: FormGroup = this.fb.group(
     {
@@ -68,10 +74,21 @@ export class SignUpComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.form.valid) {
-      console.log('Form Data:', this.form.value);
-    } else {
+    if (this.form.invalid) {
       this.form.markAllAsTouched();
+      return;
     }
+
+    const { email, password } = this.form.value;
+    const registerData = { email, password };
+    this.authService.register(registerData)
+      .then((response: RegisterResponse) => {
+        this.router.navigate(['/login'], { queryParams: { email: response.email } });
+        console.log('Registration successful', response);
+      })
+      .catch((error) => {
+        console.error('Registration failed', error);
+      });
+
   }
 }

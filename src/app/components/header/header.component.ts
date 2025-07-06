@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 
@@ -10,7 +10,7 @@ import { ButtonModule } from 'primeng/button';
   styleUrl: './header.component.scss',
 })
 export class HeaderComponent {
-  constructor(public router: Router) {}
+  router = inject(Router);
   hiddenButtonRoutes = ['/login'];
 
   showLoginButton(): boolean {
