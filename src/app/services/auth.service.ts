@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { catchError, lastValueFrom, Observable } from 'rxjs';
-import { LoginData, RegisterData, RegisterResponse } from './auth.utils';
+import { LoginData, LoginResponse, RegisterData, RegisterResponse } from './auth.utils';
 
 @Injectable({
   providedIn: 'root',
@@ -17,8 +17,10 @@ export class AuthService {
     );
   }
 
-  public login(data: LoginData) {
-    const url = `${environment.baseUrl}/api/login/`;
-    return lastValueFrom(this.http.post(url, data));
+  login(data: LoginData): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(
+      `${environment.baseUrl}/api/login/`,
+      data
+    );
   }
 }

@@ -27,7 +27,7 @@ export class ResetPasswordComponent {
   showPassword = false;
   showConfirmPassword = false;
 
-  readonly fb = inject(FormBuilder);
+  fb = inject(FormBuilder);
 
   form: FormGroup = this.fb.group(
     {

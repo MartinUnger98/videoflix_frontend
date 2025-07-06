@@ -11,3 +11,10 @@ export interface LoginData {
 export interface RegisterResponse {
   email: string;
 }
+
+export interface LoginResponse {
+  token: string;
+  username: string;
+  email: string;
+  user_id: number;
+}
