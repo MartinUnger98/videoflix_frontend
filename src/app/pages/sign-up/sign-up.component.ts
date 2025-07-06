@@ -6,7 +6,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { PrimeIcons } from 'primeng/api';
+import { MessageService, PrimeIcons } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
@@ -14,8 +14,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { passwordMatchValidator } from './password-validator';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { HttpClientModule } from '@angular/common/http';
 import { RegisterResponse } from '../../services/auth.utils';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-sign-up',
@@ -26,7 +26,7 @@ import { RegisterResponse } from '../../services/auth.utils';
     IconFieldModule,
     InputIconModule,
     ReactiveFormsModule,
-    HttpClientModule
+    ProgressSpinnerModule,
   ],
   templateUrl: './sign-up.component.html',
   styleUrl: './sign-up.component.scss',
@@ -36,12 +36,13 @@ export class SignUpComponent implements OnInit {
 
   showPassword = false;
   showConfirmPassword = false;
+  showSpinner = false;
 
   fb = inject(FormBuilder);
   route = inject(ActivatedRoute);
   router = inject(Router);
   authService = inject(AuthService);
-
+  messageService = inject(MessageService);
 
   form: FormGroup = this.fb.group(
     {
@@ -81,14 +82,27 @@ export class SignUpComponent implements OnInit {
 
     const { email, password } = this.form.value;
     const registerData = { email, password };
-    this.authService.register(registerData)
-      .then((response: RegisterResponse) => {
-        this.router.navigate(['/login'], { queryParams: { email: response.email } });
+    this.showSpinner = true;
+    this.authService.register(registerData).subscribe({
+      next: (response: RegisterResponse) => {
         console.log('Registration successful', response);
-      })
-      .catch((error) => {
-        console.error('Registration failed', error);
-      });
+        this.router.navigate(['/login'], {
+          queryParams: { email: response.email },
+        });
+        this.showSuccess();
+        this.showSpinner = false;
+      },
+      error: (error) => {
+        this.showError(error.error.email[0]);
+        this.showSpinner = false;
+      }
+    });
+  }
 
+  showSuccess() {
+    this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Welcome to Videoflix - your account is ready!' });
+  }
+  showError(errorMessage: string) {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: errorMessage });
   }
 }

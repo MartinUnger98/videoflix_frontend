@@ -10,9 +10,11 @@ import { LoginData, RegisterData, RegisterResponse } from './auth.utils';
 export class AuthService {
   http = inject(HttpClient);
 
-  public register(data: RegisterData): Promise<RegisterResponse> {
-    const url = `${environment.baseUrl}/api/register/`;
-    return lastValueFrom(this.http.post<RegisterResponse>(url, data));
+  register(data: RegisterData): Observable<RegisterResponse> {
+    return this.http.post<RegisterResponse>(
+      `${environment.baseUrl}/api/register/`,
+      data
+    );
   }
 
   public login(data: LoginData) {
