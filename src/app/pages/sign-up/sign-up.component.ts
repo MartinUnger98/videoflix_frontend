@@ -100,7 +100,7 @@ export class SignUpComponent implements OnInit {
   }
 
   showSuccess() {
-    this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Welcome to Videoflix - your account is ready!' });
+    this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Account created! Please check your email to activate your account.' });
   }
   showError(errorMessage: string) {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: errorMessage });

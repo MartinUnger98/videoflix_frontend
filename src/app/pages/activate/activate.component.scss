@@ -1,0 +1,16 @@
+.activate-bg {
+  background-image: linear-gradient(
+      180deg,
+      #000000 -19.89%,
+      rgba(0, 0, 0, 0.55) 40.46%,
+      #000000 100%
+    ),
+    url("/assets/images/login.webp");
+}
+
+
+.form-container {
+  background-color: #1b1b22d9;
+  border-radius: 48px;
+  max-width: 520px;
+}

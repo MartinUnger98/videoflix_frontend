@@ -2,7 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { catchError, lastValueFrom, Observable } from 'rxjs';
-import { LoginData, LoginResponse, RegisterData, RegisterResponse } from './auth.utils';
+import {
+  ActivateData,
+  LoginData,
+  LoginResponse,
+  RegisterData,
+  RegisterResponse,
+} from './auth.utils';
 
 @Injectable({
   providedIn: 'root',
@@ -22,5 +28,10 @@ export class AuthService {
       `${environment.baseUrl}/api/login/`,
       data
     );
+  }
+
+  activateAccount(data: ActivateData): Observable<any> {
+    const url = `${environment.baseUrl}/api/activate/${data.uid}/${data.token}/`;
+    return this.http.get(url);
   }
 }

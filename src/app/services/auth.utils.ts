@@ -18,3 +18,8 @@ export interface LoginResponse {
   email: string;
   user_id: number;
 }
+
+export interface ActivateData {
+  uid: string;
+  token: string;
+}
