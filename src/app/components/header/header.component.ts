@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
+import { PrimeIcons } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 
 @Component({
@@ -12,8 +13,14 @@ import { ButtonModule } from 'primeng/button';
 export class HeaderComponent {
   router = inject(Router);
   hiddenButtonRoutes = ['/login'];
+  primeIcons = PrimeIcons;
 
   showLoginButton(): boolean {
-    return !this.hiddenButtonRoutes.includes(this.router.url);
+    const url = this.router.url;
+    return !['/login', '/main-page'].includes(url);
+  }
+
+  showLogoutButton(): boolean {
+    return this.router.url === '/main-page';
   }
 }

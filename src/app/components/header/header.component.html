@@ -20,4 +20,15 @@
       [routerLink]="'/login'"
     ></p-button>
   }
+
+  @if (showLogoutButton()) {
+    <p-button
+      severity="primary"
+      class="font-bold text-lg"
+      label="Log Out"
+      [routerLink]="'/login'"
+      [icon]="primeIcons.SIGN_OUT"
+    ></p-button>
+  }
+
 </main>
