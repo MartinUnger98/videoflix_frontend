@@ -14,6 +14,7 @@ import {
 } from '@angular/forms';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { AuthService } from '../../services/auth.service';
+import { LoginForm } from '../../utils/forms-types';
 
 @Component({
   selector: 'app-login',
@@ -39,15 +40,18 @@ export class LoginComponent implements OnInit {
   authService = inject(AuthService);
   fb = inject(FormBuilder);
 
-  form: FormGroup = this.fb.group({
-    email: [
-      '',
-      [
+  form: FormGroup<LoginForm> = this.fb.nonNullable.group({
+    email: this.fb.control<string>('', {
+      nonNullable: true,
+      validators: [
         Validators.required,
         Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/),
       ],
-    ],
-    password: ['', [Validators.required]],
+    }),
+    password: this.fb.control<string>('', {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
   });
 
   togglePassword() {
@@ -68,7 +72,7 @@ export class LoginComponent implements OnInit {
     }
 
     this.loginError = '';
-    const { email, password } = this.form.value;
+    const { email, password } = this.form.getRawValue();
     const loginData = { email, password };
     this.showSpinner = true;
     this.authService.login(loginData).subscribe({

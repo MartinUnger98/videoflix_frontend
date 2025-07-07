@@ -12,6 +12,6 @@ export const routes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: 'sign-up', component: SignUpComponent},
   {path: 'forgot-password', component: ForgotPasswordComponent},
-  {path: 'reset-password', component: ResetPasswordComponent},
+  {path: 'password-reset-confirm/:uid/:token', component: ResetPasswordComponent},
   {path: 'activate/:uid/:token', component: ActivateComponent},
 ];

@@ -16,6 +16,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { RegisterResponse } from '../../services/auth.utils';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { SignUpForm } from '../../utils/forms-types';
 
 @Component({
   selector: 'app-sign-up',
@@ -44,19 +45,25 @@ export class SignUpComponent implements OnInit {
   authService = inject(AuthService);
   messageService = inject(MessageService);
 
-  form: FormGroup = this.fb.group(
+  form: FormGroup<SignUpForm> = this.fb.nonNullable.group(
     {
-      email: [
-        '',
-        [
+      email: this.fb.control<string>('', {
+        nonNullable: true,
+        validators: [
           Validators.required,
           Validators.pattern(
             /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
           ),
         ],
-      ],
-      password: ['', [Validators.required, Validators.minLength(8)]],
-      confirmPassword: ['', [Validators.required]],
+      }),
+      password: this.fb.control<string>('', {
+        nonNullable: true,
+        validators: [Validators.required, Validators.minLength(8)],
+      }),
+      confirmPassword: this.fb.control<string>('', {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
     },
     {
       validators: passwordMatchValidator(),
@@ -80,7 +87,7 @@ export class SignUpComponent implements OnInit {
       return;
     }
 
-    const { email, password } = this.form.value;
+    const { email, password } = this.form.getRawValue();
     const registerData = { email, password };
     this.showSpinner = true;
     this.authService.register(registerData).subscribe({
@@ -95,14 +102,23 @@ export class SignUpComponent implements OnInit {
       error: (error) => {
         this.showError(error.error.email[0]);
         this.showSpinner = false;
-      }
+      },
     });
   }
 
   showSuccess() {
-    this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Account created! Please check your email to activate your account.' });
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Success',
+      detail:
+        'Account created! Please check your email to activate your account.',
+    });
   }
   showError(errorMessage: string) {
-    this.messageService.add({ severity: 'error', summary: 'Error', detail: errorMessage });
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: errorMessage,
+    });
   }
 }
