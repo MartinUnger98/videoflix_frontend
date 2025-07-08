@@ -40,7 +40,11 @@ export class HeaderComponent {
         this.router.navigate(['/']);
       },
       error: (error) => {
-        console.error('Logout failed:', error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: error.error.detail,
+        });
       },
     });
   }
