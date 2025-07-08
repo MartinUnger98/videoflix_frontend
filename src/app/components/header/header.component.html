@@ -26,8 +26,8 @@
       severity="primary"
       class="font-bold text-lg"
       label="Log Out"
-      [routerLink]="'/login'"
       [icon]="primeIcons.SIGN_OUT"
+      (click)="onLogoutBtnClick()"
     ></p-button>
   }
 

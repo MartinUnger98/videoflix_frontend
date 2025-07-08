@@ -14,7 +14,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { passwordMatchValidator } from './password-validator';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { RegisterResponse } from '../../services/auth.utils';
+import { RegisterResponse } from '../../utils/auth.utils';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { SignUpForm } from '../../utils/forms-types';
 

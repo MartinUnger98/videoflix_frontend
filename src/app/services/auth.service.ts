@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { catchError, lastValueFrom, Observable } from 'rxjs';
-import { ActivateRequest, ActivateResponse, LoginRequest, LoginResponse, RegisterRequest, RegisterResponse, RequestPasswordResetRequest, RequestPasswordResetResponse, ResetPasswordRequest, ResetPasswordResponse } from './auth.utils';
+import { ActivateRequest, ActivateResponse, LoginRequest, LoginResponse, LogoutResponse, RegisterRequest, RegisterResponse, RequestPasswordResetRequest, RequestPasswordResetResponse, ResetPasswordRequest, ResetPasswordResponse } from '../utils/auth.utils';
 
 @Injectable({
   providedIn: 'root',
@@ -21,6 +21,13 @@ export class AuthService {
     return this.http.post<LoginResponse>(
       `${environment.baseUrl}/api/login/`,
       data
+    );
+  }
+
+  logout(): Observable<LogoutResponse> {
+    return this.http.post<LogoutResponse>(
+      `${environment.baseUrl}/api/logout/`,
+      {}
     );
   }
 

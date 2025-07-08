@@ -6,6 +6,7 @@ import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password
 import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 import { ActivateComponent } from './pages/activate/activate.component';
 import { MainpageComponent } from './pages/mainpage/mainpage.component';
+import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   { path: '', component: StartPageComponent },
@@ -17,5 +18,10 @@ export const routes: Routes = [
     component: ResetPasswordComponent,
   },
   { path: 'activate/:uid/:token', component: ActivateComponent },
-  { path: 'main-page', component: MainpageComponent },
+  {
+    path: 'main-page',
+    component: MainpageComponent,
+    canActivate: [AuthGuard],
+  },
+  { path: '**', redirectTo: '', pathMatch: 'full' }
 ];

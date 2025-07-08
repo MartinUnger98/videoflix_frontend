@@ -5,7 +5,7 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   FormBuilder,
   FormGroup,
@@ -37,6 +37,7 @@ export class LoginComponent implements OnInit {
   loginError = '';
 
   route = inject(ActivatedRoute);
+  router = inject(Router);
   authService = inject(AuthService);
   fb = inject(FormBuilder);
 
@@ -81,7 +82,7 @@ export class LoginComponent implements OnInit {
         localStorage.setItem('token', response.token);
         localStorage.setItem('username', response.username);
         localStorage.setItem('email', response.email);
-        window.location.href = '/';
+        this.router.navigate(['/main-page']);
       },
       error: (error) => {
         this.showSpinner = false;

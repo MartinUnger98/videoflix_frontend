@@ -45,3 +45,7 @@ export interface ResetPasswordRequest {
 export interface ResetPasswordResponse {
   message: string;
 }
+
+export interface LogoutResponse {
+  message: string;
+}
