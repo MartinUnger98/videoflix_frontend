@@ -1,3 +1,27 @@
-@for (genre of genres; track $index) {
+<div class="w-full relative">
+  <div class="gradient w-full h-full absolute top-0 left-0"></div>
+  <img
+    class="w-full object-cover h-full block"
+    [src]="selectedVideo?.thumbnail"
+    alt="Selected Video Thumbnail"
+  />
+</div>
+
+@for (genre of genres; track $index) { @if (hasVideosForGenre(genre.name)) {
 <h1>{{ genre.name }}</h1>
-}
+
+<p-carousel
+  [value]="getVideosForGenre(genre.name)"
+  [numVisible]="3"
+  [numScroll]="3"
+  [circular]="true"
+>
+  <ng-template let-video pTemplate="item">
+    <img
+      [src]="video.thumbnail"
+      [alt]="video.title"
+      class="w-full border-round mb-2"
+    />
+  </ng-template>
+</p-carousel>
+} }
