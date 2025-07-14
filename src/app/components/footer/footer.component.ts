@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-footer',
@@ -8,4 +9,9 @@ import { Component } from '@angular/core';
 })
 export class FooterComponent {
 
+  router = inject(Router);
+
+  showFooter(): boolean {
+    return this.router.url !== '/main-page';
+  }
 }

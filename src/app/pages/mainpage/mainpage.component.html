@@ -1,27 +1,53 @@
-<div class="w-full relative">
-  <div class="gradient w-full h-full absolute top-0 left-0"></div>
-  <img
-    class="w-full object-cover h-full block"
-    [src]="selectedVideo?.thumbnail"
-    alt="Selected Video Thumbnail"
-  />
-</div>
-
-@for (genre of genres; track $index) { @if (hasVideosForGenre(genre.name)) {
-<h1>{{ genre.name }}</h1>
-
-<p-carousel
-  [value]="getVideosForGenre(genre.name)"
-  [numVisible]="3"
-  [numScroll]="3"
-  [circular]="true"
->
-  <ng-template let-video pTemplate="item">
+<main class="text-white">
+  <div class="w-full relative md:block hidden">
+    <div class="gradient w-full h-full absolute top-0 left-0"></div>
     <img
-      [src]="video.thumbnail"
-      [alt]="video.title"
-      class="w-full border-round mb-2"
+      class="w-full object-cover h-full block"
+      [src]="selectedVideo?.thumbnail"
+      alt="Selected Video Thumbnail"
     />
-  </ng-template>
-</p-carousel>
-} }
+    <div
+      class="absolute flex flex-col gap-8 top-40 sm:left-24 left-4 z-20 max-w-96"
+    >
+      <h1 class="text-7xl font-bold drop-shadow-lg">
+        {{ selectedVideo?.title }}
+      </h1>
+      <p class="text-lg drop-shadow w-full wrap-break-word">
+        {{ selectedVideo?.description }}
+      </p>
+      <p-button
+        severity="primary"
+        class="mt-6 font-bold text-lg"
+        label="Play"
+        [icon]="primeIcons.CARET_RIGHT"
+      ></p-button>
+    </div>
+  </div>
+
+  <div class="flex flex-col gap-12 sm:px-24 px-4 xl:-mt-32 md:pt-0 pt-36">
+    @for (genre of genres; track $index) { @if (hasVideosForGenre(genre.name)) {
+    <div class="flex flex-col gap-4 relative">
+      <h2 class="text-2xl font-bold">{{ genre.name }}</h2>
+
+      <div class="relative">
+        <!-- Scrolling-Leiste -->
+        <div
+          class="flex gap-6 overflow-x-auto scrollbar-hide scroll-smooth px-2 py-1"
+        >
+          @for (video of videos; track $index) { @if (video.genre_name ===
+          genre.name) {
+          <div class="flex-shrink-0 w-52 h-32">
+            <img
+              class="w-full object-cover rounded-lg cursor-pointer transition-transform duration-200 hover:scale-105"
+              [src]="video.thumbnail"
+              alt="{{ video.title }}"
+              (click)="selectedVideo = video"
+            />
+          </div>
+          } }
+        </div>
+      </div>
+    </div>
+    } }
+  </div>
+</main>

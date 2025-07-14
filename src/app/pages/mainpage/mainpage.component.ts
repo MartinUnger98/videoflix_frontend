@@ -5,12 +5,15 @@ import { Video } from '../../utils/videos.utils';
 import { VideosService } from '../../services/videos.service';
 import { CarouselModule } from 'primeng/carousel';
 import { CommonModule } from '@angular/common';
+import { ButtonModule } from 'primeng/button';
+import { PrimeIcons } from 'primeng/api';
 
 @Component({
   selector: 'app-mainpage',
   imports: [
     CommonModule,
-    CarouselModule
+    CarouselModule,
+    ButtonModule
   ],
   templateUrl: './mainpage.component.html',
   styleUrl: './mainpage.component.scss',
@@ -22,6 +25,7 @@ export class MainpageComponent implements OnInit {
 
   genreService = inject(GenreService);
   videoService = inject(VideosService);
+  primeIcons = PrimeIcons;
 
   ngOnInit(): void {
     this.genreService.getGenres().subscribe({
