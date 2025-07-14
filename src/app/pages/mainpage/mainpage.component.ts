@@ -7,6 +7,8 @@ import { CarouselModule } from 'primeng/carousel';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { PrimeIcons } from 'primeng/api';
+import { Router } from '@angular/router';
+import { BreakpointObserver } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-mainpage',
@@ -25,6 +27,8 @@ export class MainpageComponent implements OnInit {
 
   genreService = inject(GenreService);
   videoService = inject(VideosService);
+  router = inject(Router);
+  breakpointObserver = inject(BreakpointObserver);
   primeIcons = PrimeIcons;
 
   ngOnInit(): void {
@@ -53,5 +57,13 @@ export class MainpageComponent implements OnInit {
 
   getVideosForGenre(genreName: string): Video[] {
     return this.videos.filter((video) => video.genre_name === genreName);
+  }
+
+  onVideoClick(video: Video): void {
+    if (this.breakpointObserver.isMatched('(max-width: 767px)')) {
+      this.router.navigate(['/video-detail', video.id]);
+    } else {
+      this.selectedVideo = video;
+    }
   }
 }
