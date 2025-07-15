@@ -26,5 +26,40 @@ input:-webkit-autofill:active {
 
 body {
   background-color: #141414;
+  min-height: 100vh;
+}
+
+.vjs-resolution-menu {
+  position: absolute;
+  bottom: 48px;
+  right: 8px;
+  background: #000c;
+  color: white;
+  padding: 6px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1000;
+}
+
+.vjs-resolution-option {
+  padding: 4px 8px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.vjs-resolution-option.selected,
+.vjs-resolution-option:hover {
+  background-color: #FFFFFF33;
+  border-radius: 8px;
+}
+
+.vjs-resolution-button .pi {
+  font-size: 1.4rem;
+}
+
+.vjs-hidden {
+  display: none !important;
 }
 

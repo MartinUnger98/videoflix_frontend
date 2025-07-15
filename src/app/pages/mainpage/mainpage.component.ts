@@ -9,13 +9,16 @@ import { ButtonModule } from 'primeng/button';
 import { PrimeIcons } from 'primeng/api';
 import { Router } from '@angular/router';
 import { BreakpointObserver } from '@angular/cdk/layout';
+import { Dialog, DialogModule } from '@angular/cdk/dialog';
+import { VideoplayerComponent } from '../videoplayer/videoplayer.component';
 
 @Component({
   selector: 'app-mainpage',
   imports: [
     CommonModule,
     CarouselModule,
-    ButtonModule
+    ButtonModule,
+    DialogModule
   ],
   templateUrl: './mainpage.component.html',
   styleUrl: './mainpage.component.scss',
@@ -29,6 +32,7 @@ export class MainpageComponent implements OnInit {
   videoService = inject(VideosService);
   router = inject(Router);
   breakpointObserver = inject(BreakpointObserver);
+  dialogservice = inject(Dialog)
   primeIcons = PrimeIcons;
 
   ngOnInit(): void {
@@ -65,5 +69,13 @@ export class MainpageComponent implements OnInit {
     } else {
       this.selectedVideo = video;
     }
+  }
+
+  onPlayVideo(video: Video): void {
+    this.dialogservice.open(VideoplayerComponent, {
+      data: {
+        video
+      },
+    });
   }
 }

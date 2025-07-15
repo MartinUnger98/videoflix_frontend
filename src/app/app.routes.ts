@@ -8,6 +8,7 @@ import { ActivateComponent } from './pages/activate/activate.component';
 import { MainpageComponent } from './pages/mainpage/mainpage.component';
 import { AuthGuard } from './guards/auth.guard';
 import { VideoDetailComponent } from './pages/video-detail/video-detail.component';
+import { VideoplayerComponent } from './pages/videoplayer/videoplayer.component';
 
 export const routes: Routes = [
   { path: '', component: StartPageComponent },

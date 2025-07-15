@@ -1,35 +1,31 @@
-<main
-class="flex justify-between py-10 sm:px-24 px-4">
+<header class="flex justify-between py-10 sm:px-24 px-4">
   <img
     src="assets/images/videoflix_logo.svg"
     alt="Videoflix Logo"
     class="hidden sm:block cursor-pointer"
-    [routerLink]="'/'"
+    (click)="onIconClick()"
   />
 
   <img
     src="assets/images/videoflix_logo_kurz.png"
     alt="Videoflix Logo (small)"
     class="block sm:hidden cursor-pointer"
-    [routerLink]="'/'"
+    (click)="onIconClick()"
   />
   @if (showLoginButton()) {
-    <p-button
-      severity="primary"
-      class="font-bold text-lg"
-      label="Log in"
-      [routerLink]="'/login'"
-    ></p-button>
+  <p-button
+    severity="primary"
+    class="font-bold text-lg"
+    label="Log in"
+    [routerLink]="'/login'"
+  ></p-button>
+  } @if (showLogoutButton()) {
+  <p-button
+    severity="primary"
+    class="font-bold text-lg"
+    label="Log Out"
+    [icon]="primeIcons.SIGN_OUT"
+    (click)="onLogoutBtnClick()"
+  ></p-button>
   }
-
-  @if (showLogoutButton()) {
-    <p-button
-      severity="primary"
-      class="font-bold text-lg"
-      label="Log Out"
-      [icon]="primeIcons.SIGN_OUT"
-      (click)="onLogoutBtnClick()"
-    ></p-button>
-  }
-
-</main>
+</header>

@@ -22,6 +22,7 @@
         class="mt-6 font-bold text-lg"
         label="Play"
         [icon]="primeIcons.CARET_RIGHT"
+        (click)="selectedVideo && onPlayVideo(selectedVideo)"
       ></p-button>
     </div>
   </div>

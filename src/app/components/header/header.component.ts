@@ -21,11 +21,12 @@ export class HeaderComponent {
 
   showLoginButton(): boolean {
     const url = this.router.url;
-    return !['/login', '/main-page'].includes(url);
+    return !(url === '/main-page' || url.startsWith('/video-detail'));
   }
 
   showLogoutButton(): boolean {
-    return this.router.url === '/main-page';
+    const url = this.router.url;
+    return ['/main-page'].includes(url) || url.startsWith('/video-detail');
   }
 
   onLogoutBtnClick() {
@@ -47,5 +48,14 @@ export class HeaderComponent {
         });
       },
     });
+  }
+
+  onIconClick() {
+    const url = this.router.url;
+    if (url === '/main-page' || url.startsWith('/video-detail')) {
+      this.router.navigate(['/main-page']);
+    } else {
+      this.router.navigate(['/']);
+    }
   }
 }

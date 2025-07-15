@@ -1,0 +1,36 @@
+<!-- Optimierungs-Hinweis -->
+@if (showOptimizingNotice) {
+<div
+  class="absolute top-2/4 left-1/2 transform -translate-x-1/2 bg-black/80 text-white px-4 py-2 rounded z-40 text-sm"
+>
+  Optimizing video for your screen...
+</div>
+}
+
+<!-- Video Container -->
+<div class="relative max-w-6xl mx-auto w-[90vw]">
+  <header
+    class="header-video-player absolute top-0 left-0 w-full flex justify-between items-center py-6 sm:px-10 px-4 text-white z-30"
+  >
+    <i [class]="primeIcons.ARROW_LEFT" class="icon" (click)="goBack()"></i>
+    <img
+      src="assets/images/videoflix_logo_kurz.png"
+      alt="Videoflix Logo (small)"
+    />
+  </header>
+
+  <video
+    id="videoElement"
+    class="video-js vjs-default-skin vjs-big-play-centered w-full"
+    controls
+    preload="auto"
+  >
+    <p class="vjs-no-js">Please enable JavaScript to view this video.</p>
+  </video>
+</div>
+
+<!-- Beschreibung -->
+<div class="text-white px-4 sm:px-10 max-w-6xl mx-auto mt-6">
+  <h1 class="text-2xl font-bold mb-2">{{ video?.title }}</h1>
+  <p class="text-lg text-gray-300">{{ video?.description }}</p>
+</div>

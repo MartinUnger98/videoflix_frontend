@@ -30,6 +30,7 @@
               "src/favicon.ico"
             ],
             "styles": [
+              "node_modules/video.js/dist/video-js.css",
               "src/styles.scss",
               "src/styles.css"
             ],
@@ -88,6 +89,7 @@
               "src/favicon.ico"
             ],
             "styles": [
+              "node_modules/video.js/dist/video-js.css",
               "src/styles.scss",
               "src/styles.css"
             ],
