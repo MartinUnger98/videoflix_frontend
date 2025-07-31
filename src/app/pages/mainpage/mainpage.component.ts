@@ -47,7 +47,7 @@ export class MainpageComponent implements OnInit {
     this.videoService.getVideos().subscribe({
       next: (response) => {
         this.videos = response;
-        this.selectedVideo = response[1] || null;
+        this.selectedVideo = response[0] || null;
       },
       error: (error) => {
         console.error('Error fetching videos:', error);

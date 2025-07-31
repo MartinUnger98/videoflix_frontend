@@ -5,37 +5,56 @@ import {
   AfterViewInit,
   inject,
 } from '@angular/core';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import videojs from 'video.js';
-import { VideosService } from '../../services/videos.service';
+import 'videojs-contrib-quality-levels';
+import Player from 'video.js/dist/types/player';
+import VideoJsComponent from 'video.js/dist/types/component';
 import { Video } from '../../utils/videos.utils';
+import { VideosService } from '../../services/videos.service';
 import { PrimeIcons } from 'primeng/api';
-import { SelectModule } from 'primeng/select';
 import { CommonModule } from '@angular/common';
+import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import { DialogModule } from 'primeng/dialog';
+import { SelectModule } from 'primeng/select';
 
-type VideoJsPlayer = ReturnType<typeof videojs>;
+interface QualityLevel {
+  id: string;
+  height: number;
+  bitrate: number;
+  enabled: boolean;
+}
+
+interface PlayerWithQualityLevels extends Player {
+  qualityLevels(): {
+    length: number;
+    [index: number]: QualityLevel;
+    on(event: 'addqualitylevel', callback: () => void): void;
+  };
+}
+
+interface VideoJsComponentWithControlText extends Component {
+  controlText(text: string): void;
+}
+
 
 @Component({
   selector: 'app-videoplayer',
-  standalone: true,
-  imports: [SelectModule, CommonModule, RouterModule, DialogModule],
+  imports: [CommonModule, RouterModule, DialogModule, SelectModule],
   templateUrl: './videoplayer.component.html',
   styleUrl: './videoplayer.component.scss',
 })
 export class VideoplayerComponent implements OnInit, AfterViewInit, OnDestroy {
   data = inject(DIALOG_DATA);
   dialogRef = inject(DialogRef<VideoplayerComponent>);
-  player!: VideoJsPlayer;
-  video: Video | null = null;
-  primeIcons = PrimeIcons;
-  showOptimizingNotice = true;
-  showResolutions = false;
-
   route = inject(ActivatedRoute);
   router = inject(Router);
   videoService = inject(VideosService);
+
+  player!: Player;
+  video: Video | null = null;
+  primeIcons = PrimeIcons;
+  showOptimizingNotice = true;
 
   ngOnInit(): void {
     this.video = this.data?.video;
@@ -49,18 +68,27 @@ export class VideoplayerComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   initPlayer(): void {
-    if (this.player) {
-      this.player.dispose();
-    }
+    if (this.player) this.player.dispose();
 
     const videoElement = document.getElementById('videoElement');
     if (!videoElement) return;
 
-    this.player = videojs(videoElement, {
-      fluid: true,
+    this.player = this.createVideoJsPlayer(videoElement);
+    this.player.ready(() => this.onPlayerReady());
+  }
+
+   createVideoJsPlayer(videoElement: HTMLElement): Player {
+    return videojs(videoElement, {
       controls: true,
-      autoplay: false,
+      fluid: true,
       responsive: true,
+      autoplay: false,
+      html5: {
+        vhs: {
+          withCredentials: false,
+          overrideNative: true,
+        },
+      },
       sources: [
         {
           src: `http://localhost:8000/media/${this.video!.hls_playlist}`,
@@ -68,164 +96,159 @@ export class VideoplayerComponent implements OnInit, AfterViewInit, OnDestroy {
         },
       ],
     });
-
-    this.player.ready(() => {
-      const controlBar = this.player.getChild('ControlBar');
-      if (controlBar) {
-        this.createResolutionButton(controlBar);
-      }
-    });
   }
 
-  createResolutionMenuButton(): void {
-    const VideoJSButton = videojs.getComponent('Button');
-    const vm = this;
+   onPlayerReady(): void {
+    const qualityLevels = (this.player as PlayerWithQualityLevels).qualityLevels();
+    const buttons: HTMLElement[] = [];
+    let selectedIndex = -1;
 
-    class ResolutionButton extends VideoJSButton {
-      constructor(player: any, options: any) {
+    const menu = this.createQualityMenu();
+    const autoBtn = this.createAutoButton(() => {
+      for (let i = 0; i < qualityLevels.length; i++) {
+        qualityLevels[i].enabled = true;
+      }
+      selectedIndex = -1;
+      this.updateSelection(buttons, autoBtn, selectedIndex);
+    });
+    menu.appendChild(autoBtn);
+
+    qualityLevels.on('addqualitylevel', () => {
+      this.populateQualityLevels(
+        qualityLevels,
+        buttons,
+        menu,
+        autoBtn,
+        selectedIndex
+      );
+      this.appendMenuIfMissing(menu);
+    });
+
+    this.registerQualityToggle(menu);
+  }
+
+   createQualityMenu(): HTMLElement {
+    const menu = document.createElement('div');
+    menu.className = 'vjs-quality-menu';
+    Object.assign(menu.style, {
+      position: 'absolute',
+      display: 'none',
+      flexDirection: 'column-reverse',
+      bottom: '40px',
+      right: '10px',
+      zIndex: '1000',
+      background: '#1e1e1e',
+      borderRadius: '8px',
+      padding: '8px 0',
+      minWidth: '130px',
+    });
+    return menu;
+  }
+
+   createAutoButton(onClick: () => void): HTMLButtonElement {
+    const autoBtn = document.createElement('button');
+    autoBtn.className = 'vjs-quality-button';
+    autoBtn.innerHTML = `<i class="${this.primeIcons.CHECK}" style="margin-right: 6px;"></i>Automatisch`;
+    this.styleMenuButton(autoBtn);
+    autoBtn.onclick = onClick;
+    return autoBtn;
+  }
+
+   styleMenuButton(btn: HTMLButtonElement): void {
+    Object.assign(btn.style, {
+      color: '#ffffff',
+      background: 'transparent',
+      border: 'none',
+      padding: '10px 16px',
+      textAlign: 'left',
+      cursor: 'pointer',
+      fontSize: '16px',
+    });
+
+    btn.onmouseenter = () => (btn.style.backgroundColor = '#333333');
+    btn.onmouseleave = () => (btn.style.backgroundColor = 'transparent');
+  }
+
+   populateQualityLevels(
+    qualityLevels: ReturnType<PlayerWithQualityLevels['qualityLevels']>,
+    buttons: HTMLElement[],
+    menu: HTMLElement,
+    autoBtn: HTMLElement,
+    selectedIndex: number
+  ): void {
+    while (buttons.length < qualityLevels.length) {
+      const i = buttons.length;
+      const level = qualityLevels[i];
+      const label = `${level.height}p`;
+
+      const btn = document.createElement('button');
+      btn.setAttribute('data-label', label);
+      btn.innerHTML = `<span style="width: 22px; display:inline-block;"></span>${label}`;
+      btn.className = 'vjs-quality-button';
+      this.styleMenuButton(btn);
+
+      btn.onclick = () => {
+        for (let j = 0; j < qualityLevels.length; j++) {
+          qualityLevels[j].enabled = j === i;
+        }
+        selectedIndex = i;
+        this.updateSelection(buttons, autoBtn, selectedIndex);
+      };
+
+      buttons.push(btn);
+      menu.insertBefore(btn, autoBtn);
+    }
+  }
+
+   updateSelection(
+    buttons: HTMLElement[],
+    autoBtn: HTMLElement,
+    selectedIndex: number
+  ): void {
+    buttons.forEach((btn, i) => {
+      btn.innerHTML =
+        (i === selectedIndex
+          ? `<i class="${this.primeIcons.CHECK}" style="margin-right: 6px;"></i>`
+          : `<span style="width: 22px; display:inline-block;"></span>`) +
+        btn.getAttribute('data-label');
+    });
+
+    autoBtn.innerHTML =
+      (selectedIndex === -1
+        ? `<i class="${this.primeIcons.CHECK}" style="margin-right: 6px;"></i>`
+        : `<span style="width: 22px; display:inline-block;"></span>`) +
+      'Automatisch';
+  }
+
+   appendMenuIfMissing(menu: HTMLElement): void {
+    const videoContainer = document.querySelector('.video-js');
+    if (videoContainer && !videoContainer.querySelector('.vjs-quality-menu')) {
+      videoContainer.appendChild(menu);
+    }
+  }
+
+   registerQualityToggle(menu: HTMLElement): void {
+    const Button = videojs.getComponent('Button');
+
+    class QualityToggle extends Button {
+      constructor(player: Player, options: Record<string, unknown>) {
         super(player, options);
-        this.el().setAttribute('aria-label', 'Quality');
-        this.addClass('vjs-resolution-button');
-
-        this.el().innerHTML = `
-        <span class="pi ${vm.primeIcons.VIDEO}"></span>
-        <div class="vjs-resolution-menu vjs-hidden">
-          ${['Auto', '120p', '360p', '720p', '1080p']
-            .map(
-              (q) =>
-                `<div class="vjs-resolution-option" data-quality="${q}">${q}</div>`
-            )
-            .join('')}
-        </div>
-      `;
-
-        this.el()
-          .querySelectorAll('.vjs-resolution-option')
-          .forEach((el) => {
-            el.addEventListener('click', (e) => {
-              const target = e.target as HTMLElement;
-              const quality = target.dataset['quality']!;
-              vm.changeResolutionFromLabel(quality);
-              this.toggleMenu(false);
-            });
-          });
-
-        this.on('click', () => {
-          const menu = this.el().querySelector(
-            '.vjs-resolution-menu'
-          ) as HTMLElement;
-          const isOpen = !menu.classList.contains('vjs-hidden');
-          this.toggleMenu(!isOpen);
-        });
+        ((this as unknown) as VideoJsComponentWithControlText).controlText('Qualität');
+        this.addClass('vjs-quality-toggle');
       }
 
-      toggleMenu(show: boolean) {
-        const menu = this.el().querySelector(
-          '.vjs-resolution-menu'
-        ) as HTMLElement;
-        menu.classList.toggle('vjs-hidden', !show);
+      handleClick() {
+        menu.style.display = menu.style.display === 'none' ? 'flex' : 'none';
       }
     }
 
-    videojs.registerComponent('ResolutionMenuButton', ResolutionButton);
-  }
+    videojs.registerComponent('QualityToggle', QualityToggle);
+    this.player.getChild('controlBar')?.addChild('QualityToggle', {}, 10);
 
-  createResolutionButton(controlBar: any): void {
-    const vm = this;
-
-    const btn = document.createElement('button');
-    btn.className = 'vjs-control vjs-button vjs-resolution-button';
-    btn.innerHTML = `<span class="pi ${this.primeIcons.VIDEO}"></span>`;
-    btn.onclick = () => {
-      const menu = controlBar.el().querySelector('.vjs-resolution-menu')!;
-      menu.classList.toggle('vjs-hidden');
-    };
-
-    const menu = document.createElement('div');
-    menu.className = 'vjs-resolution-menu vjs-hidden';
-
-    const qualities = ['hls', '120p', '360p', '720p', '1080p'];
-    qualities.forEach((q) => {
-      const opt = document.createElement('div');
-      opt.className = 'vjs-resolution-option';
-      opt.innerText = q === 'hls' ? 'Auto' : q;
-      opt.dataset['quality'] = q;
-      opt.onclick = () => {
-        vm.selectResolution(q, menu);
-      };
-      menu.appendChild(opt);
-    });
-
-    controlBar.el().appendChild(btn);
-    controlBar.el().appendChild(menu);
-  }
-
-  selectResolution(label: string, menu: HTMLElement): void {
-    this.changeResolutionFromLabel(label);
-    menu.classList.add('vjs-hidden');
-
-    const allOptions = menu.querySelectorAll('.vjs-resolution-option');
-    allOptions.forEach((opt) => opt.classList.remove('selected'));
-
-    const selected = Array.from(allOptions).find(
-      (el) => el instanceof HTMLElement && el.dataset['quality'] === label
-    );
-    selected?.classList.add('selected');
-  }
-
-  renderResolutionMenu(container: HTMLElement): void {
-    const existing = container.querySelector('.vjs-resolution-menu');
-    if (existing) {
-      existing.remove();
-      return;
+    const toggleBtn = document.querySelector('.vjs-quality-toggle');
+    if (toggleBtn) {
+      toggleBtn.innerHTML = `<i class="${this.primeIcons.VIDEO}"></i>`;
     }
-
-    const menu = document.createElement('div');
-    menu.className = 'vjs-resolution-menu';
-
-    const qualities = ['120p', '360p', '720p', '1080p'];
-
-    for (const q of qualities) {
-      const option = document.createElement('div');
-      option.className = 'vjs-resolution-option';
-      option.innerText = q;
-
-      option.onclick = () => {
-        this.changeResolutionFromLabel(q);
-        menu.remove();
-        this.showResolutions = false;
-      };
-
-      menu.appendChild(option);
-    }
-
-    container.appendChild(menu);
-  }
-
-  changeResolutionFromLabel(label: string): void {
-    if (!this.video || !this.player) return;
-
-    if (label === 'hls') {
-      this.player.src({
-        src: `http://localhost:8000/media/${this.video.hls_playlist}`,
-        type: 'application/x-mpegURL',
-      });
-      this.player.play();
-      return;
-    }
-
-    const sources: { [key: string]: string } = {
-      '120p': this.video.file_120p,
-      '360p': this.video.file_360p,
-      '720p': this.video.file_720p,
-      '1080p': this.video.file_1080p,
-    };
-
-    const src = sources[label];
-    if (!src) return;
-
-    this.player.src({ src, type: 'video/mp4' });
-    this.player.play();
   }
 
   goBack(): void {
@@ -234,9 +257,5 @@ export class VideoplayerComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.player?.dispose();
-  }
-
-  onOpenResolutionClick(): void {
-    this.showResolutions = !this.showResolutions;
   }
 }
