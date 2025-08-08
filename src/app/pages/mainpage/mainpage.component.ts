@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { VideoplayerComponent } from '../videoplayer/videoplayer.component';
+import { HorizontalScrollDirective } from './horizontal-scroll.directive';
 
 @Component({
   selector: 'app-mainpage',
@@ -18,7 +19,8 @@ import { VideoplayerComponent } from '../videoplayer/videoplayer.component';
     CommonModule,
     CarouselModule,
     ButtonModule,
-    DialogModule
+    DialogModule,
+    HorizontalScrollDirective
   ],
   templateUrl: './mainpage.component.html',
   styleUrl: './mainpage.component.scss',
