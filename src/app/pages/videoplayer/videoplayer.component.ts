@@ -8,7 +8,6 @@ import {
 import videojs from 'video.js';
 import 'videojs-contrib-quality-levels';
 import Player from 'video.js/dist/types/player';
-import VideoJsComponent from 'video.js/dist/types/component';
 import { Video } from '../../utils/videos.utils';
 import { VideosService } from '../../services/videos.service';
 import { PrimeIcons } from 'primeng/api';
@@ -17,6 +16,7 @@ import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import { DialogModule } from 'primeng/dialog';
 import { SelectModule } from 'primeng/select';
+import { environment } from '../../../environments/environment';
 
 interface QualityLevel {
   id: string;
@@ -91,7 +91,7 @@ export class VideoplayerComponent implements OnInit, AfterViewInit, OnDestroy {
       },
       sources: [
         {
-          src: `http://localhost:8000/media/${this.video!.hls_playlist}`,
+          src: `${environment.baseUrl}/media/${this.video!.hls_playlist}`,
           type: 'application/x-mpegURL',
         },
       ],

@@ -72,6 +72,7 @@ export class LoginComponent implements OnInit {
       return;
     }
 
+    localStorage.clear();
     this.loginError = '';
     const { email, password } = this.form.getRawValue();
     const loginData = { email, password };

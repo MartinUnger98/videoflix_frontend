@@ -24,6 +24,7 @@ export class ActivateComponent{
 
     const data = { uid, token };
 
+    localStorage.clear();
     this.authService.activateAccount(data).subscribe({
       next: (res) => {
         if (res.message === 'Account already activated.') {

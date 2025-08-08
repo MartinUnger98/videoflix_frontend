@@ -1,0 +1,55 @@
+.login-bg {
+  background-image: linear-gradient(
+      180deg,
+      #000000 -19.89%,
+      rgba(0, 0, 0, 0.55) 40.46%,
+      #000000 100%
+    ),
+    url("/assets/images/login.webp");
+}
+
+.sign_up-bg {
+  background-image: linear-gradient(
+      180deg,
+      #000000 -19.89%,
+      rgba(0, 0, 0, 0.55) 40.46%,
+      #000000 100%
+    ),
+    url('/assets/images/sign_up.webp');
+}
+
+.start_page-bg {
+  background-image: linear-gradient(
+      180deg,
+      #000000 -19.89%,
+      rgba(0, 0, 0, 0.55) 40.46%,
+      #000000 100%
+    ),
+    url('/assets/images/start_page.webp');
+}
+
+.header-default, .footer-default {
+  @media (max-height: 650px) {
+    position: static;
+  }
+}
+
+.header-small, .footer-small {
+  @media (max-height: 460px) {
+    position: static;
+  }
+}
+
+.router-outlet-default {
+  min-height: 100vh;
+  @media (max-height: 650px ) {
+    min-height: auto;
+  }
+}
+
+.router-outlet-small {
+  min-height: 100vh;
+  @media (max-height: 460px ) {
+    min-height: auto;
+  }
+}

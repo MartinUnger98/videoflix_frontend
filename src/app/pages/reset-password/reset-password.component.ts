@@ -64,6 +64,8 @@ export class ResetPasswordComponent {
       this.form.markAllAsTouched();
       return;
     }
+
+    localStorage.clear();
     const new_password = this.form.getRawValue().password;
     const uidb64 = this.route.snapshot.paramMap.get('uid') ?? '';
     const token = this.route.snapshot.paramMap.get('token') ?? '';

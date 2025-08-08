@@ -34,6 +34,7 @@ export class ForgotPasswordComponent {
   onForgotPasswordBtnClick(): void {
     const data = { email: this.email };
 
+    localStorage.clear();
     this.authService.requestPasswordReset(data).subscribe({
       next: (response) => {
         this.router.navigate(['/login']);

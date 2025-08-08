@@ -87,6 +87,7 @@ export class SignUpComponent implements OnInit {
       return;
     }
 
+    localStorage.clear();
     const { email, password } = this.form.getRawValue();
     const registerData = { email, password };
     this.showSpinner = true;

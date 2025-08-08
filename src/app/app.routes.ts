@@ -8,7 +8,6 @@ import { ActivateComponent } from './pages/activate/activate.component';
 import { MainpageComponent } from './pages/mainpage/mainpage.component';
 import { AuthGuard } from './guards/auth.guard';
 import { VideoDetailComponent } from './pages/video-detail/video-detail.component';
-import { VideoplayerComponent } from './pages/videoplayer/videoplayer.component';
 import { ImprintComponent } from './pages/imprint/imprint.component';
 import { PrivacyPolicyComponent } from './pages/privacy-policy/privacy-policy.component';
 import { DefaultLayoutComponent } from './layouts/default-layout/default-layout.component';
