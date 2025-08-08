@@ -77,19 +77,25 @@ export class DefaultLayoutComponent implements OnInit {
     const deepestRoute = this.getDeepestChild(this.route);
     const urlSegments = deepestRoute?.snapshot.url
       .map((segment) => segment.path)
-      .join('/'); // Holen der URL-Teile
+      .join('/');
 
-    console.log(urlSegments); // Überprüfen, was hier ausgegeben wird
+    switch (true) {
+      case urlSegments?.includes('activate'):
+      case urlSegments === '':
+        this.outletSizeClass = '-small';
+        this.headerSize = '-small';
+        this.footerSize = '-small';
+        break;
 
-    // Überprüfen, ob 'activate' im URL-Pfad enthalten ist
-    if (urlSegments==='' || urlSegments.includes('activate')) {
-      this.outletSizeClass = '-small';
-      this.headerSize = '-small';
-      this.footerSize = '-small';
-    } else {
-      this.outletSizeClass = '-default';
-      this.headerSize = '-default';
-      this.footerSize = '-default';
+      case urlSegments?.includes('video-detail'):
+      case urlSegments === 'main-page':
+        break;
+
+      default:
+        this.outletSizeClass = '-default';
+        this.headerSize = '-default';
+        this.footerSize = '-default';
+        break;
     }
   }
 
